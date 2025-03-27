@@ -1,0 +1,7 @@
+clc                     -   Limpa a tela
+clear                   -   Apaga a memória
+disp()                  -   Mostra conteúdo entre parênteses
+sqrt()                  -   Calcula Raíz quadrada
+input()                 -   Solicita uma entrada de dado   (ex: a = input('Digite o valor dea')
+num2str()               -   Mostra a variável corretamente
+diary nome do arquivo   -   Cria um arquivo dentro do diret�rio selecionado no MathLab     
