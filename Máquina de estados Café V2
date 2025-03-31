@@ -20,7 +20,7 @@ int main() {
     }
     else if (estado == 2) {  
     printf("Aquecendo a água. ");
-    for (temp = 25; temp <= 100; temp += 15) {
+    for (temp = 25; temp <= 100; temp = temp + 15) {
     printf("Temperatura: %d°C\n", temp);
     }
     printf("Água aquecida a 100°C. ");
