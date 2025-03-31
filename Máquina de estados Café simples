@@ -1,0 +1,37 @@
+void loop() {
+    switch (estadoAtual) {
+        case ESPERA:
+            if (digitalRead(BOTAO_INICIO) == HIGH) {
+                estadoAtual = MOENDO;
+                Serial.println("Moendo café...");
+            }
+            break;
+
+        case MOENDO:
+            delay(2000); // Simula moagem
+            estadoAtual = AQUECENDO;
+            Serial.println("Aquecendo água...");
+            break;
+
+        case AQUECENDO:
+            temperatura += 15;
+            Serial.print("Temperatura: ");
+            Serial.println(temperatura);
+            if (temperatura >= 100) {
+                estadoAtual = PASSANDO;
+                Serial.println("Água aquecida. Passando pelo café...");
+            }
+            delay(1000);
+            break;
+
+        case PASSANDO:
+            delay(3000); // Simula passagem da água
+            estadoAtual = PRONTO;
+            Serial.println("Café pronto!");
+            break;
+
+        case PRONTO:
+            // Fica pronto até resetar
+            break;
+    }
+}
