@@ -1,0 +1,84 @@
+.section .data
+    msg_pedir: .asciz "Digite 1 para passar o cafe: "
+    msg_moer: .asciz "Moendo o cafe...\n"
+    msg_aquecer: .asciz "Aquecendo a agua...\n"
+    msg_temp: .asciz "Temperatura: %dC\n"
+    msg_aquecida: .asciz "Agua aquecida a 100C\n"
+    msg_pronto: .asciz "Cafe pronto!\n"
+    formato: .asciz "%d"
+
+.section .bss
+    .lcomm inicia, 4
+    .lcomm temp, 4
+    .lcomm i, 4
+    .lcomm k, 4
+
+.section .text
+    .globl main
+    .extern printf, scanf
+
+main:
+    # Exibir mensagem para entrada do usuario
+    push $msg_pedir
+    call printf
+    addl $4, %esp
+
+    # Ler entrada do usuario
+    push $inicia
+    push $formato
+    call scanf
+    addl $8, %esp
+
+    # Verificar se inicia == 1
+    movl inicia, %eax
+    cmpl $1, %eax
+    jne fim
+
+    # Moendo o cafe
+    push $msg_moer
+    call printf
+    addl $4, %esp
+
+    # Simular tempo de moagem
+    movl $200, %ecx
+loop_moer:
+    loop loop_moer
+
+    # Aquecendo a agua
+    push $msg_aquecer
+    call printf
+    addl $4, %esp
+
+    # Loop de aquecimento
+    movl $25, temp
+loop_aquecer:
+    push temp
+    push $msg_temp
+    call printf
+    addl $8, %esp
+
+    # Incrementar temperatura
+    addl $15, temp
+    cmpl $100, temp
+    jle loop_aquecer
+
+    # Agua aquecida
+    push $msg_aquecida
+    call printf
+    addl $4, %esp
+
+    # Simular passagem da agua no po
+    movl $200, %ecx
+loop_passagem:
+    loop loop_passagem
+
+    # Cafe pronto
+    push $msg_pronto
+    call printf
+    addl $4, %esp
+
+fim:
+    # Encerrar programa
+    movl $1, %eax
+    xorl %ebx, %ebx
+    int $0x80
