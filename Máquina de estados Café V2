@@ -1,0 +1,39 @@
+#include <stdio.h>
+
+int main() {
+    int temp, inicia, i, k;
+    int estado = 0;
+
+    while (estado != 4) {
+    if (estado == 0) {
+    printf("Digite 1 para passar o café: ");
+    scanf("%d", &inicia);
+
+    if (inicia == 1) {
+    estado = 1; 
+    }
+    }
+    else if (estado == 1) { 
+    printf("Moendo o café. ");
+    for (i = 0; i < 200; i++); 
+    estado = 2;  
+    }
+    else if (estado == 2) {  
+    printf("Aquecendo a água. ");
+    for (temp = 25; temp <= 100; temp += 15) {
+    printf("Temperatura: %d°C\n", temp);
+    }
+    printf("Água aquecida a 100°C. ");
+    estado = 3;  
+    }
+    else if (estado == 3) {  
+    printf("Passando água pelo pó do café. ");
+    for (k = 0; k < 200; k++); 
+    estado = 4;  
+    }
+    }
+
+    printf("Café pronto!");
+
+    return 0;
+    }
