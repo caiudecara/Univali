@@ -1,0 +1,25 @@
+#include <stdio.h>
+
+int main() {
+    int temp, inicia, i, j, k;
+   
+
+    printf("Digite 1 para passar o café: ");
+    scanf("%d", &inicia);
+
+    if (inicia == 1) {
+        printf("Moendo o café. ");
+        for (i = 0; i < 200; i++); 
+
+        printf("Aquecendo a água. ");
+        for (temp = 25; temp <= 100; temp = temp + 15) {
+            printf("Temperatura: %d°C\n", temp);
+        }
+        printf("Água aquecida a 100°C. ");
+        
+        for (k = 0; k < 200; k++); // Esse passo é só para simular a água passando no pó do café, onde "k" seria um sensor.
+        printf("Café pronto.");
+    }
+
+    return 0;
+}
