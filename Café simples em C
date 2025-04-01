@@ -17,7 +17,7 @@ int main() {
         }
         printf("Água aquecida a 100°C. ");
         
-        for (k = 0; k < 200; k++); // Esse passo é só para simular a água passando no pó do café, onde "k" seria um sensor.
+        for (k = 0; k < 200; k++);
         printf("Café pronto.");
     }
 
