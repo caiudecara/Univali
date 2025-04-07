@@ -16,15 +16,18 @@ function bissecao_raiz(a_val , b_val)
    fa = f(a_val);
    fb = f(b_val);
    if fa * fb > 0
-       error('Função não muda de sinal no intervalo informado');
+       error('O número de raízes entre os pontos é diferente de 1');
    end
    for iter = 1:iterMax
        x = (a_val + b_val) / 2;
        fx = f(x);
        erro = abs(b_val - a_val) / 2;
-       fprintf('%2d\t%8.5f\t%8.5f\t%8.5f\t%10.3e\t%10.3e\n', iter, a_val, b_val, x, fx, erro);
-       if erro < tol || abs(fx) < tol
-           break;
+       fprintf('%2d\n', iter, a_val, b_val, x, fx, erro);
+      if erro < tol
+        break;
+       elseif abs(fx) < tol
+        break;
+       else
        end
        if fa * fx > 0
            a_val = x;
@@ -34,7 +37,7 @@ function bissecao_raiz(a_val , b_val)
            fb = fx;
        end
    end
-   fprintf('\nRaiz encontrada: x = %.6f em %d iterações\n', x, iter);
+   fprintf('Raiz encontrada: x = %2d em %d iterações', x, iter);
    % Marcar a raiz
    plot(x, f(x), 'ro', 'MarkerFaceColor', 'r');
    legend('f(x)', 'Raiz encontrada');
