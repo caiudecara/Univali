@@ -16,31 +16,30 @@ function bissecao_raiz(a_val , b_val)
    fa = f(a_val);
    fb = f(b_val);
    if fa * fb > 0
-       error('O número de raízes entre os pontos é diferente de 1');
+   error('O número de raízes entre os pontos é diferente de 1');
    end
    for iter = 1:iterMax
-       x = (a_val + b_val) / 2;
-       fx = f(x);
-       erro = abs(b_val - a_val) / 2;
-       fprintf('%2d\n', iter, a_val, b_val, x, fx, erro);
-      if erro < tol
-        break;
-       elseif abs(fx) < tol
-        break;
-       else
-       end
-       if fa * fx > 0
-           a_val = x;
-           fa = fx;
-       else
-           b_val = x;
-           fb = fx;
-       end
+   x = (a_val + b_val) / 2;
+   fx = f(x);
+   erro = abs(b_val - a_val) / 2;
+   fprintf('%2d\n', iter, a_val, b_val, x, fx, erro);
+   if erro < tol
+   break;
+   elseif abs(fx) < tol
+   break;
+   else
    end
-   fprintf('Raiz encontrada: x = %2d em %d iterações', x, iter);
-   % Marcar a raiz
+   if fa * fx > 0
+   a_val = x;
+   fa = fx;
+   else
+   b_val = x;
+   fb = fx;
+   end
+   end
+   fprintf('Raiz: x = %2d, tentataivas: %d', x, iter);
    plot(x, f(x), 'ro', 'MarkerFaceColor', 'r');
    legend('f(x)', 'Raiz encontrada');
    hold off;
    title('Caio e Thiago')
-end
+   end
