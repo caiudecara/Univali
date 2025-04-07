@@ -1,0 +1,43 @@
+function bissecao_raiz(a_val , b_val)
+   q = 2e-5;          
+   Q = 2e-5;          
+   e0 = 8.9e-12;      
+   r = 0.85;          
+   F = 1.747;        
+   f = @(x) (1/(4*pi*e0)) * (q * Q * x) ./ ((x.^2 + r^2).^(3/2)) - F;
+   xplot = linspace(0.01, 10, 1000);
+   yplot = f(xplot);
+   figure;
+   plot(xplot, yplot), grid on;
+   xlabel('x (m)'), ylabel('f(x)');
+   hold on;
+   tol = 1e-5;
+   iterMax = 100;
+   fa = f(a_val);
+   fb = f(b_val);
+   if fa * fb > 0
+       error('Função não muda de sinal no intervalo informado');
+   end
+   for iter = 1:iterMax
+       x = (a_val + b_val) / 2;
+       fx = f(x);
+       erro = abs(b_val - a_val) / 2;
+       fprintf('%2d\t%8.5f\t%8.5f\t%8.5f\t%10.3e\t%10.3e\n', iter, a_val, b_val, x, fx, erro);
+       if erro < tol || abs(fx) < tol
+           break;
+       end
+       if fa * fx > 0
+           a_val = x;
+           fa = fx;
+       else
+           b_val = x;
+           fb = fx;
+       end
+   end
+   fprintf('\nRaiz encontrada: x = %.6f em %d iterações\n', x, iter);
+   % Marcar a raiz
+   plot(x, f(x), 'ro', 'MarkerFaceColor', 'r');
+   legend('f(x)', 'Raiz encontrada');
+   hold off;
+   title('Caio e Thiago')
+end
