@@ -1,45 +1,43 @@
 function bissecao_raiz(a_val , b_val)
-   q = 2e-5;          
-   Q = 2e-5;          
+   q = 0.00002;          
+   Q = 0.00002;          
    e0 = 8.9e-12;      
    r = 0.85;          
    F = 1.747;        
-   f = @(x) (1/(4*pi*e0)) * (q * Q * x) ./ ((x.^2 + r^2).^(3/2)) - F;
-   xplot = linspace(0.01, 10, 1000);
+   f = @(x) (1/(4*pi*e0)) * (q * Q * x) ./ ((x.^2 + r^2).^(3/2)) - F; %O '@' SERVE PARA UTILIZAR A FÓRMULA DO PRÓPRIO CÓDIGO
+   xplot = linspace(0.01, 10, 1000); %PLOTA ORGANIZADO
    yplot = f(xplot);
    figure;
-   plot(xplot, yplot), grid on;
-   xlabel('x (m)'), ylabel('f(x)');
-   hold on;
-   tol = 1e-5;
+   plot(xplot, yplot), grid on; %GRID ON LIGA A GRADE
+   xlabel('x (m)'), ylabel('f(x)'); %NOMEIA OS EIXOS
+   hold on; %FAZ O PRÓXIMO GRÁFICO SER PLOTADO EM CIMA DO PRIMEIRO
+   tol = 0.00001;
    iterMax = 100;
    fa = f(a_val);
    fb = f(b_val);
-   if fa * fb > 0
-   error('O número de raízes entre os pontos é diferente de 1');
+    if fa * fb > 0
+     error('O número de raízes entre os pontos é diferente de 1'); %GERA ERRO
+    end
+    for iter = 1:iterMax %CONTA iterMAX DE 1 ATÉ 100
+      x = (a_val + b_val) / 2;
+      fx = f(x);
+     erro = abs(b_val - a_val) / 2; %FUNÇÃO 'abs' É O MÓDULO
+    fprintf('%2d\n', iter, a_val, b_val, x, fx, erro); %'fprintf' FACILITA A IMPRESSÃO DAS VARIÁVEIS
+    if erro < tol
+     break;
+    elseif abs(fx) < tol
+    break;
+    else
+    end
+    if fa * fx > 0
+     a_val = x;
+     fa = fx;
+    else
+    b_val = x;
+    fb = fx;
+    end
    end
-   for iter = 1:iterMax
-   x = (a_val + b_val) / 2;
-   fx = f(x);
-   erro = abs(b_val - a_val) / 2;
-   fprintf('%2d\n', iter, a_val, b_val, x, fx, erro);
-   if erro < tol
-   break;
-   elseif abs(fx) < tol
-   break;
-   else
-   end
-   if fa * fx > 0
-   a_val = x;
-   fa = fx;
-   else
-   b_val = x;
-   fb = fx;
-   end
-   end
-   fprintf('Raiz: x = %2d, tentataivas: %d', x, iter);
-   plot(x, f(x), 'ro', 'MarkerFaceColor', 'r');
-   legend('f(x)', 'Raiz encontrada');
-   hold off;
-   title('Caio e Thiago')
-   end
+   fprintf('Raiz: x = %2d, tentativas: %d', x, iter);
+   plot(x, f(x), 'k*'); %MARCA A RAÍZ NO GRÁFICO
+   title('Caio e Thiago');
+ end
