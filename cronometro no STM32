@@ -1,0 +1,102 @@
+#include "main.h"
+
+// define 3 pinos de bits mutiplexados
+#define D0_Pin GPIO_PIN_0
+#define D1_Pin GPIO_PIN_1
+#define D2_Pin GPIO_PIN_2
+#define D_Port GPIOA
+
+// pino para alternar entre os displays
+#define DISPLAY_SEL_Pin GPIO_PIN_3
+#define DISPLAY_SEL_Port GPIOA
+
+// botao
+#define BUTTON_Pin GPIO_PIN_0
+#define BUTTON_Port GPIOB
+
+
+uint8_t segundos = 0;
+uint8_t cronometro_ativo = 1;
+
+
+const uint8_t bcd_map[10] = {
+    0b000, // 0
+    0b001, // 1
+    0b010, // 2
+    0b011, // 3
+    0b100, // 4
+    0b101, // 5
+    0b110, // 6
+    0b111, // 7
+    0b000, // 8 (repete 0 se não tiver mais bits)
+    0b001  // 9 (idem)
+};
+
+
+void mostrar_digito(uint8_t digito, uint8_t display);
+void checar_botao(void);
+
+
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
+    if (htim->Instance == TIM2 && cronometro_ativo) {
+        segundos++;
+        if (segundos > 60) segundos = 0;
+    }
+}
+
+
+void mostrar_digito(uint8_t digito, uint8_t display) {
+    // Limita digito entre 0 e 9
+    if (digito > 9) digito = 0;
+
+    
+    HAL_GPIO_WritePin(D_Port, D0_Pin, (digito & 0x01) ? GPIO_PIN_SET : GPIO_PIN_RESET);
+    HAL_GPIO_WritePin(D_Port, D1_Pin, (digito & 0x02) ? GPIO_PIN_SET : GPIO_PIN_RESET);
+    HAL_GPIO_WritePin(D_Port, D2_Pin, (digito & 0x04) ? GPIO_PIN_SET : GPIO_PIN_RESET);
+
+  
+    if (display == 0) {
+        HAL_GPIO_WritePin(DISPLAY_SEL_Port, DISPLAY_SEL_Pin, GPIO_PIN_RESET);
+    } else {
+        HAL_GPIO_WritePin(DISPLAY_SEL_Port, DISPLAY_SEL_Pin, GPIO_PIN_SET);
+    } // essa parte fica alternando entre os displays
+}
+
+
+void checar_botao(void) {
+    static uint8_t ultimo_estado = 0;
+    uint8_t estado_atual = HAL_GPIO_ReadPin(BUTTON_Port, BUTTON_Pin);
+
+    if (estado_atual == GPIO_PIN_SET && ultimo_estado == GPIO_PIN_RESET) {
+        HAL_Delay(20); // debounce
+        if (HAL_GPIO_ReadPin(BUTTON_Port, BUTTON_Pin) == GPIO_PIN_SET) {
+            cronometro_ativo = !cronometro_ativo;
+            if (!cronometro_ativo) segundos = 0;
+            while (HAL_GPIO_ReadPin(BUTTON_Port, BUTTON_Pin) == GPIO_PIN_SET); // espera soltar
+        }
+    }
+    ultimo_estado = estado_atual;
+}
+
+
+int main(void) {
+    HAL_Init();
+    SystemClock_Config(); 
+    MX_GPIO_Init();       
+    MX_TIM2_Init();       // timer 1hz
+
+    HAL_TIM_Base_Start_IT(&htim2); // botao
+
+    while (1) {
+        checar_botao();
+
+        // alterna entre os displays
+        uint8_t unidade = segundos % 10;
+        uint8_t dezena = segundos / 10;
+
+        mostrar_digito(unidade, 0);
+        HAL_Delay(2);
+        mostrar_digito(dezena, 1);
+        HAL_Delay(2);
+    }
+}
